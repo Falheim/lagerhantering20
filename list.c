@@ -1,3 +1,4 @@
+//list.c
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -39,11 +40,11 @@ void print_list(list_t *list){
 	printf("%c%d,", current->shelf.row, current->shelf.col);
 	current = current->next;
       } else{
-	printf("%c%d}", current->shelf.row, current->shelf.col);
+	printf("%c%d}\n", current->shelf.row, current->shelf.col);
 	return;
       }
     }
-  printf("NULL}");
+  printf("NULL}\n");
 }
 
 struct link *make_link(shelf_t shelf, struct link *next)
@@ -78,11 +79,10 @@ unsigned int list_length(list_t *list)
 {
   unsigned int size = 0;
   struct link *current = list->first;
-  while(current != NULL)
-    {
-      ++size;
-      current = current->next;
-    }
+  while(current != NULL) {
+    ++size;
+    current = current->next;
+  }
   return size;
 }
 
@@ -109,25 +109,55 @@ shelf_t *list_last(list_t *list)
   } 
 }
 
-/*
-bool list_insert(list_t *list, int index, int elem)
+shelf_t *list_get(list_t *list, int index)
 {
-  return true;
+  struct link *current = list->first;
+  while (current != NULL && index >= 0)
+    {
+      if (index == 0) return &(current->shelf);
+      current = current->next;
+      index--;
+    }
+  return NULL;
 }
 
-
-
-bool list_remove(list_t *list, int index, int *elem)
+bool list_insert(list_t *list, int index, shelf_t shelf)
 {
-  return true;
+  struct link *current = list->first;
+  if(index == 0) {
+    list_prepend(list, shelf);
+    }
+  while(current){
+    if(index == 1){ //nod före där vi vill sätta in
+      struct link *temp = current->next;
+      current->next = make_link(shelf, temp);
+      return true;
+    }
+    current=current->next;
+    index--;
+  }
+  return false; 
 }
 
-int *list_get(list_t *list, int index)
+bool list_remove(list_t *list, int index, shelf_t *store_shelf)
 {
-  return -1;
+  struct link *current = list->first;
+  if(index == 0){
+    store_shelf = &(current->shelf); // TODO: Fixa så adress tilldelas korrekt
+    list->first = current->next;
+    return true;
+  }
+  while(current){
+    if(index == 1){ //nod före index
+      store_shelf = &(current->next->shelf); // TODO: ^
+      current->next = current->next->next;
+      return true;
+    }
+    current=current->next;
+    index--;
+  }
+  return false;  
 }
-
-*/
 
 int main()
 {
@@ -136,20 +166,39 @@ int main()
   shelf_t c = {.row = 'C', .col = 3};
   shelf_t d = {.row = 'D', .col = 4};
   shelf_t e = {.row = 'E', .col = 5};
+  
   list_t *l = make_list();
-  list_append(l,a);
+  list_append(l,d);
   list_prepend(l,b);
-  list_append(l,c);
-  list_prepend(l,d);
-  list_append(l,e);
-   
+  list_append(l,d);
+  list_prepend(l,b);
+  list_append(l,d);
+  list_prepend(l,b);
+  
+  list_insert(l, 0, a); // insättning head
+  list_insert(l, 4, c); // insättning index
+  list_insert(l, 8, e); // insättning som sista element
+  list_insert(l, -1, d); // ogiltig insättning före listan
+  list_insert(l, 10, d); // insättning efter slutet av listan
+  
   print_list(l);
   shelf_t *f = list_first(l);
   shelf_t *la = list_last(l);
   printf("\nLength of list: %d\n", list_length(l) );
   printf("First: %c%d\tLast: %c%d", f->row,f->col, la->row, la->col);
+  
+  shelf_t *g = list_get(l, 0);
+  printf("\n%c%d\n", g->row, g->col);
+  shelf_t *h = list_get(l, 2);
+  printf("%c%d", h->row, h->col);
+  shelf_t *i = list_get(l, 4);
+  printf("\n%c%d\n", i->row, i->col);
+
+  shelf_t *s_shelf;
+  list_remove(l, 0, s_shelf);
+  list_remove(l, 3, s_shelf);
+  print_list(l);
+  printf("Storedshelf: %c%d\n", (*s_shelf).row, (*s_shelf).col);
+  
   return 0;
 }
-
-
-  
