@@ -1,36 +1,38 @@
-//link.h
 #ifndef __list_h__
 #define __list_h__
 
 #include <stdbool.h>
 
-/// Define struct list in your .c file not here! (why?)
+typedef struct shelf shelf_t; // Ta bort och länka in från annan modul i senare skede
+// List that contains of a pointer to first and last element.
 typedef struct list list_t;
 
-/// \file list.h
-///
-/// \author Tobias Wrigstad
-/// \version 1.0
-/// \date 2015-08-28
-/// \bug None known. But this code is untested so there are likely bigs in it. 
+// Struct containing a shelf and a pointer to next shelf.
+typedef struct link link_t;
 
 
 /// Creates a new list
-///
+/// 
 /// \returns: empty list
-list_t *list_new();
+list_t *make_list();
+
+// Creates a new link
+// returns: link struct, containing
+link_t *make_link(shelf_t shelf, link_t *next);
+
+
 
 /// Inserts a new element at the end of the list
 ///
 /// \param list pointer to the list
 /// \param elem the integer to be appended
-void list_append(list_t *list, int elem);
+void list_append(list_t *list, shelf_t elem);
 
 /// Inserts a new element at the end of the list
 ///
 /// \param list pointer to the list
 /// \param elem the integer to be prepended
-void list_prepend(list_t *list, int elem);
+void list_prepend(list_t *list, shelf_t elem);
 
 /// Inserts a new element at a given index. 
 ///
@@ -61,7 +63,7 @@ void list_prepend(list_t *list, int elem);
 /// \param index the index for elem to be inserted at
 /// \param elem  the integer to be prepended
 /// \returns true if succeeded, else false
-bool list_insert(list_t *list, int index, int elem);
+bool list_insert(list_t *list, int index, shelf_t elem);
 
 /// Removes an element from a list.
 ///
@@ -75,7 +77,7 @@ bool list_insert(list_t *list, int index, int elem);
 /// \param index the index to be removed
 /// \param elem a pointer to where the element can be stored
 /// \returns true if succeeded, else 
-bool list_remove(list_t *list, int index, int *elem);
+bool list_remove(list_t *list, int index, shelf_t *elem);
 
 /// Returns the element at a given index
 /// \param list  pointer to the list
@@ -84,10 +86,10 @@ bool list_remove(list_t *list, int index, int *elem);
 int *list_get(list_t *list, int index);
 
 /// A convenience for list_get(list, 0)
-int *list_first(list_t *list);
+shelf_t *list_first(list_t *list);
 
 /// A convenience for list_get(list, -1)
-int *list_last(list_t *list);
+shelf_t *list_last(list_t *list);
 
 /// Returns the length of the list. It is undefined
 /// whether the length is calculated in O(n) time or
@@ -95,7 +97,8 @@ int *list_last(list_t *list);
 /// that is manipulated by insert, remove, etc. 
 /// \param list the list
 /// \returns the length of list
-int list_length(list_t *list);
+unsigned int list_length(list_t *list);
 
 #endif
+
 
