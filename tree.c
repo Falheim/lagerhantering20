@@ -90,7 +90,7 @@ int max_depth(treenode_t *tree){
     }
 }
 
-// return pointer to node with name //
+// return pointer to node with data //
 treenode_t* find_node(treenode_t *treenode, char *name){
   if(treenode == NULL){
     return NULL;
@@ -136,14 +136,6 @@ treenode_t* inorder_successor(treenode_t *treenode, char *name){
 }
 
 
-   
-    
-
-
-
-//TODO tree_insert(tree_t *tree, TODO);
-
-
 
 
 
@@ -182,13 +174,54 @@ treenode_t* tree_remove(treenode_t **treenode, char *name){
 	free(*treenode);
 	return temp;	
       }
-      /* An addition should be declared here for when node has 2 children and get the
-         inorder successor(smallest in right subtree or largest in left subtree) */
-      
+  // Find inorder successor
+  treenode_t *temp = inorder_successor((*treenode)->right, name);
+  //store inorder successor in node
+  (*treenode)->item = temp->item;
+  //delete the inorder successor
+  (*treenode)->right = tree_remove(&(*treenode)->right, itemname(temp->item));
+  
   return *treenode;
       }
 
+
+treenode_t *create_treenode(item_t *item){
+  treenode_t *temp;
+  temp = calloc(1, sizeof(treenode_t));
+  temp->item = item;
+  temp->left = temp->right = NULL;
+  return temp;
+}
+
+
+treenode_t* tree_insert(treenode_t **treenode, item_t *item){
+  if (treenode == NULL){
+    (*treenode) = create_treenode(item);
+    return 0; // Not sure it should return 0..
+             //(just so it compiles for now) 
+  }
+  else if(strcmp(itemname(item), itemname((*treenode)->item)) < 0)
+    (*treenode)->left= tree_insert(&(*treenode)->left , item);
+
+  else if(strcmp(itemname(item), itemname((*treenode)->item)) == 0)
+    (*treenode)->left= tree_insert(&(*treenode)->left , item);
+  // Some repetition here, could probably easily be fixed.
+    
+    else (*treenode)->right = tree_insert(&(*treenode)->right, item);
   
+  return *treenode;
+}
+
+void ordered_print(treenode_t *treenode){
+  if(treenode == NULL){
+    puts("No more items to print");
+    return;
+  }
+  ordered_print(treenode->left);
+  printf("%s", itemname(treenode->item));
+  ordered_print(treenode->right);
+}
+						  
 
 
 
