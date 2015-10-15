@@ -50,6 +50,17 @@ int tree_size(treenode_t *tree)
   }     
 
 
+/// Scans left path from node for smallest value (since smallest will always be on left side)
+treenode_t *minimum_Node(treenode_t *treenode){
+
+  while (treenode->left != NULL){
+    treenode = treenode->left;
+  }
+  return treenode;
+}
+
+
+
 // Get the depth of the tree 
 //
 // \returns: the depth of the deepest subtree
@@ -79,6 +90,55 @@ int max_depth(treenode_t *tree){
     }
 }
 
+// return pointer to node with name //
+treenode_t* find_node(treenode_t *treenode, char *name){
+  if(treenode == NULL){
+    return NULL;
+  }
+  else if (strcmp(name, itemname(treenode->item)) == 0){
+    return treenode;
+  }
+  else if(strcmp(name, itemname(treenode->item)) > 0){
+    return find_node(treenode->right, name);
+      }
+  else{
+    return find_node(treenode->left, name);
+      }
+}
+  
+
+
+/// Finds and returns the inorder successor in bst // 
+treenode_t* inorder_successor(treenode_t *treenode, char *name){
+  treenode_t *current  = find_node(treenode, name);
+  if (current == NULL){
+    return NULL;
+      }
+  
+  //case 1: node has right subtree//
+  if ((current->right) != NULL){
+    return minimum_Node(current->right);
+  }
+
+// case 2: no right subtree //
+     else {
+      treenode_t *successor = NULL;
+      treenode_t *ancestor = treenode;
+     while(ancestor != current){
+       if (strcmp ((itemname(current->item)), (itemname(ancestor->item))) < 0){
+       successor = ancestor;
+       ancestor = ancestor->left;
+     }
+       else ancestor = ancestor->right;
+     }
+   return successor;
+     }
+}
+
+
+   
+    
+
 
 
 //TODO tree_insert(tree_t *tree, TODO);
@@ -87,10 +147,10 @@ int max_depth(treenode_t *tree){
 
 
 
-
 treenode_t* tree_remove(treenode_t **treenode, char *name){
 
-  if (*treenode == NULL){
+
+   if (*treenode == NULL){ 
     return *treenode;
   }
   
@@ -102,6 +162,8 @@ treenode_t* tree_remove(treenode_t **treenode, char *name){
   if (strcmp(name, itemname((*treenode)->item)) > 0){
     (*treenode)->right = tree_remove(&(*treenode)->right, name);
   }
+  
+  
   else if ((*treenode)->left == NULL && (*treenode)->right == NULL){
 	free(treenode);
       }
@@ -128,8 +190,25 @@ treenode_t* tree_remove(treenode_t **treenode, char *name){
 
   
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 int main(){
-printf("Hello world");
+  printf("Hello world");
 }
 
 
@@ -137,7 +216,24 @@ printf("Hello world");
 
 
 
-/// FUNCTIONS THAT NEED LOVE (Doesnt work in the slightest) ///
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/// FUNCTIONS THAT NEED LOVE ///
 
  /// Deleting a node from the tree
 
@@ -177,15 +273,3 @@ printf("Hello world");
 return treenode;
 	
   */
-
-
- /* (fungerar inte bra)
-int minNode(struct treenode* treenode){
-  struct treenode* current = treenode;
-
-  while (current->left != NULL){
-    current = current->left;
-  }
-  return(current->item);
-}
-*/
