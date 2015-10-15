@@ -23,7 +23,6 @@ typedef struct tree{
   treenode_t *root;
 } tree_t;
 
-
 /// Creates a new tree
 ///
 /// \returns: empty tree
