@@ -142,14 +142,16 @@ bool list_insert(list_t *list, int index, shelf_t shelf)
 bool list_remove(list_t *list, int index, shelf_t *store_shelf)
 {
   struct link *current = list->first;
+  size_t size_shelf = sizeof(shelf_t);
+  
   if(index == 0){
-    store_shelf = &(current->shelf); // TODO: Fixa så adress tilldelas korrekt
+    memcpy(store_shelf, &(current->shelf), size_shelf);
     list->first = current->next;
     return true;
   }
   while(current){
     if(index == 1){ //nod före index
-      store_shelf = &(current->next->shelf); // TODO: ^
+      memcpy(store_shelf, &(current->next->shelf), size_shelf);
       current->next = current->next->next;
       return true;
     }
@@ -194,11 +196,15 @@ int main()
   shelf_t *i = list_get(l, 4);
   printf("\n%c%d\n", i->row, i->col);
 
-  shelf_t *s_shelf;
+  shelf_t *s_shelf = malloc(sizeof(shelf_t));
   list_remove(l, 0, s_shelf);
-  list_remove(l, 3, s_shelf);
   print_list(l);
   printf("Storedshelf: %c%d\n", (*s_shelf).row, (*s_shelf).col);
   
+  list_remove(l, 3, s_shelf);
+  print_list(l);
+  printf("Storedshelf: %c%d\n", (*s_shelf).row, (*s_shelf).col);
+
+  free(s_shelf);
   return 0;
 }
