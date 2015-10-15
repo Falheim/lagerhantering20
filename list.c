@@ -161,6 +161,17 @@ bool list_remove(list_t *list, int index, shelf_t *store_shelf)
   return false;  
 }
 
+void free_list(list_t *list)
+{
+  struct link *current = list->first;
+  while(current){
+    struct link *temp = current;
+    current = current->next;
+    free(temp);
+  }
+  free(list);
+}
+
 int main()
 {
   shelf_t a = {.row = 'A', .col = 1};
@@ -206,5 +217,6 @@ int main()
   printf("Storedshelf: %c%d\n", (*s_shelf).row, (*s_shelf).col);
 
   free(s_shelf);
+  free_list(l);
   return 0;
 }
