@@ -10,6 +10,7 @@ char *read_string(void);
 char *get_string_with_buffer(char *b, size_t l, bool s_n);
 bool is_valid_int(char *s);
 bool is_valid_shelf(char *s);
+bool is_valid_char(char *s);
 char *str_to_str(char *s);
 int str_to_int(char *s);
 shelf_t *str_to_shelf(char *s); 
