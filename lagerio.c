@@ -12,6 +12,7 @@ Editor: Eric Falheim
 
 #define Ask_int(q)  ask_question(q, is_valid_int, str_to_int, true)
 #define Ask_str(q)  ask_question(q, NULL, str_to_str, true)
+#define Ask_char(q) ask_question("Enter a character: ", is_valid_char, str_to_str, true)
 
 #define Ask_name(q) Ask_str("Name:")
 #define Ask_description(q) Ask_str("Description:")
@@ -59,6 +60,13 @@ bool is_valid_int(char *str)
       valid_int = isdigit(*c);
     }
   return valid_int;
+}
+
+bool is_valid_char(char* str)
+{
+  if (strlen(str) == 1 && isalpha(str[0]))
+    return true;
+  return false;
 }
 
 char *str_to_str(char *str)
