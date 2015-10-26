@@ -1,3 +1,6 @@
+#ifndef __lagerio_h
+#define __lagerio_h
+
 #include <stdlib.h>
 #include <stdbool.h>
 
@@ -18,3 +21,5 @@ void *ask_question(char *q, v_f v, m_f m, bool c);
 char *ask_string_question(void);
 int *ask_int_question(void);
 shelf_t *ask_shelf_question(void);
+
+#endif
